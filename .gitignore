@@ -2,7 +2,6 @@
 # Gradle
 ######################
  
-.gradle
 build/classes
 build/generated
 build/reports
