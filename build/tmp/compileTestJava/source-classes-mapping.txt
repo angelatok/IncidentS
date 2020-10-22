@@ -1,2 +1,0 @@
-com/cms/incident/IncidentApplicationTests.java
- com.cms.incident.IncidentApplicationTests
