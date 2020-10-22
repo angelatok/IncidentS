@@ -1,0 +1,39 @@
+version: "3"
+services:
+  mymongodb:
+    image: mongo
+    container_name: "mymongodb"
+    ports:
+      - 27017:27017
+    networks:
+      - mynet
+  
+  keycloak:
+    image: angelatok/keycloak
+    container_name: keycloak
+    environment:
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+    ports:
+      - 8080:8080
+    networks:
+      mynet:
+        aliases:
+          - keycloak
+          
+  incident:
+    image: angelatok/incident
+    container_name: incident
+    ports:
+      - 8081:8081
+    depends_on:
+      - mymongodb
+      - keycloak
+    networks:
+      - mynet
+ 
+      
+
+networks:
+  mynet:
+    driver: bridge
