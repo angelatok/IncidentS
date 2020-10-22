@@ -1,26 +1,4 @@
 ######################
-# Gradle
-######################
- 
-build/classes
-build/generated
-build/reports
-build/resources
-build/test-results
-build/tmp
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-*target*
-*.war
-*.ear
-*.class
-
-######################
 # eclipse specific git ignore
 ######################
 
