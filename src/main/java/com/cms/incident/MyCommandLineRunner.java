@@ -61,7 +61,7 @@ System.out.println("command line runner !!");
 		request.setOccuredAt(new Date());
 		
 		//TODO move to commandline runner
-		String[] contextId = {"default", rString, randomString(4), randomString(4), randomString(4), "default"};
+		String[] contextId = {"default", "confi", rString, randomString(4), randomString(4), randomString(4), "default"};
 		Context ctx = new Context(rString, rString);
 		ctx.setIds(contextId);
 		

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cms.incident.AuthUtil;
 import com.cms.incident.audit.ResourceNotFoundException;
 import com.cms.incident.repos.IIncidentModel;
 import com.cms.incident.repos.IncidentModel;
@@ -36,7 +38,8 @@ public class IncidentGetController {
 	 */
 	@RolesAllowed("admin")
 	@GetMapping("/all")
-	public List<IncidentModel> getAll(){
+	public List<IncidentModel> getAll(HttpServletRequest request){
+		AuthUtil.getInfo();
 		return service.getAll();
 	}
 	
