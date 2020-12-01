@@ -20,7 +20,19 @@ services:
       mynet:
         aliases:
           - keycloak
-          
+  
+  activemq:
+    image: vromero/activemq-artemis
+    container_name: activemq
+    ports:
+      - 8161:8161
+      - 61616:61616
+      - 1883:1883
+    networks:
+      mynet:
+        aliases:
+          - activemq
+    
   incident:
     image: angelatok/incident
     container_name: incident
@@ -29,6 +41,7 @@ services:
     depends_on:
       - mymongodb
       - keycloak
+      - activemq
     networks:
       - mynet
  

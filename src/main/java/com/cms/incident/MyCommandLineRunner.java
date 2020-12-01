@@ -30,11 +30,12 @@ System.out.println("command line runner !!");
 		
 	}
 	public void buildIncidents() {
-		for(int i = 0; i < 100; i++) {
+		for(int i = 0; i < 10; i++) {
 			dao.addIncident(createBaseIncident());
 		}
 
 		AddIncidentRequest b = createBaseIncident();
+		b.setName("MyName");
 		b.setType(EType.SAFETY);
 		b.setStatus(EStatus.CLOSED);
 		dao.addIncident(b);

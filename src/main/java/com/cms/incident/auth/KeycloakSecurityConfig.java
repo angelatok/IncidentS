@@ -1,4 +1,4 @@
-package com.cms.incident;
+package com.cms.incident.auth;
 
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
@@ -27,13 +27,13 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
 		
-		//http.cors().and().csrf().disable();
+		http.cors().and().csrf().disable();
 		
 		http.authorizeRequests()
 		.anyRequest()
 		
-		.authenticated();
-		//.permitAll();
+		//.authenticated();
+		.permitAll();
 		
 //		http.authorizeRequests()
 //			.antMatchers("/user*").hasRole("USER")
@@ -43,7 +43,6 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 //			.logout()
 //			.permitAll();
 		
-//		http.csrf().disable();
 	}
 	
 	@Autowired

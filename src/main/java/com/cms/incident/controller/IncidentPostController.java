@@ -1,5 +1,6 @@
 package com.cms.incident.controller;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cms.incident.controller.request.AddIncidentRequest;
+import com.cms.incident.mqtt.GcMqttClient;
 import com.cms.incident.repos.IncidentModel;
 import com.cms.incident.repos.IncidentService;
 
@@ -22,19 +24,27 @@ import com.cms.incident.repos.IncidentService;
 public class IncidentPostController {
 	private IncidentService service;
 	
-	@Autowired
-	public IncidentPostController(IncidentService incidentService) {
-		this.service = incidentService;
-	}
+	private GcMqttClient gcMqttClient;
+
 	
+	@Autowired
+	public IncidentPostController(IncidentService incidentService, 	GcMqttClient client)
+	{
+		this.service = incidentService;
+		this.gcMqttClient = client;
+	}
+	@RolesAllowed({"admin","user"})
 	@PostMapping("/add")
 	@ResponseBody
 	public IncidentModel addIncident(@Valid @RequestBody AddIncidentRequest request){
 
 		IncidentModel model = service.addIncident(request);
+		gcMqttClient.publish(1, false, "incident", model.toString());
+		
 		return model;
 		
 	}
+	
 //	@PostMapping("/create")
 //	@ResponseBody
 //	public IncidentModel createIncident(@Valid @RequestBody NewIncidentRequest request){

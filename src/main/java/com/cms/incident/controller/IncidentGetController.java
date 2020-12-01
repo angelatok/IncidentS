@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cms.incident.AuthUtil;
 import com.cms.incident.audit.ResourceNotFoundException;
+import com.cms.incident.auth.AuthUtil;
+import com.cms.incident.mqtt.GcMqttClient;
 import com.cms.incident.repos.IIncidentModel;
 import com.cms.incident.repos.IncidentModel;
 import com.cms.incident.repos.IncidentService;
@@ -25,12 +26,16 @@ import com.cms.incident.repos.IncidentService;
 @RequestMapping("/incident")
 public class IncidentGetController {
 	private IncidentService service;
-	
+	private GcMqttClient gcMqttClient;
+
 	
 	@Autowired
-	public IncidentGetController(IncidentService incidentService) {
+	public IncidentGetController(IncidentService incidentService, GcMqttClient gcMqttClient) {
 		this.service = incidentService;
+		this.gcMqttClient = gcMqttClient;
 	}
+	
+	
 	/**
 	 * This API return all Incident from the database
 	 * 
@@ -54,6 +59,7 @@ public class IncidentGetController {
 		//TODO  assuming cxtOrigin is the workspace he is currently login
 		return service.getAllByWs(workspaceId);
 	}
+	
 	/**
 	 * This API return a summary list of incident base on the workspace id provided
 	 * @param workspaceId
@@ -88,6 +94,8 @@ public class IncidentGetController {
 		IncidentModel model = service.getByName(name).orElseThrow(() ->
 		new ResourceNotFoundException("Not found with name = " + name));
 		
+		gcMqttClient.publish(1, false, "incident", model.toString());
+
 	    return new ResponseEntity<>(model, HttpStatus.OK);
 
 // Solution 2	this does not return a json error    
@@ -107,12 +115,14 @@ public class IncidentGetController {
 			IncidentModel m = result.get();
 			return m;
 	}
+	
 	@RolesAllowed({"admin","user"})
 	@GetMapping("/security")
 	public List<IncidentModel> getAllSecurityType(){
 		return service.getAllSecurityType();
 	}
 	
+	// Note when did not specified @RolesAllowed, can access with no TOKEN 
 	@GetMapping("/safety")
 	public List<IncidentModel> getAllSafetyType(){
 		return service.getAllSafetyType();

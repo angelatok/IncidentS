@@ -1,4 +1,4 @@
-package com.cms.incident;
+package com.cms.incident.auth;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
