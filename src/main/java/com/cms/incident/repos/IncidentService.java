@@ -102,7 +102,7 @@ public class IncidentService {
 
 		
 		repos.save(incident);
-		System.out.println("incident " + incident.toString());
+		//System.out.println("incident " + incident.toString());
 		return incident;
 	}
 

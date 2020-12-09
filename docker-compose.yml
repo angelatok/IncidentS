@@ -1,5 +1,19 @@
 version: "3"
 services:
+
+  activemq:
+    image: vromero/activemq-artemis
+    container_name: activemq
+    ports:
+      - 8161:8161
+      - 61616:61616
+      - 1883:1883
+    networks:
+      mynet:
+        aliases:
+          - activemq
+  
+          
   mymongodb:
     image: mongo
     container_name: "mymongodb"
@@ -8,6 +22,8 @@ services:
     networks:
       - mynet
   
+  
+          
   keycloak:
     image: angelatok/keycloak
     container_name: keycloak
@@ -21,17 +37,7 @@ services:
         aliases:
           - keycloak
   
-  activemq:
-    image: vromero/activemq-artemis
-    container_name: activemq
-    ports:
-      - 8161:8161
-      - 61616:61616
-      - 1883:1883
-    networks:
-      mynet:
-        aliases:
-          - activemq
+  
     
   incident:
     image: angelatok/incident

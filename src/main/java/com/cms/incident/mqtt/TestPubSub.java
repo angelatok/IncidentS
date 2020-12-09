@@ -20,33 +20,32 @@ public class TestPubSub implements IMqttMessageListener{
 	
 
 	
-	@Scheduled(fixedDelay =30000)
-	public void task() {
+	@Scheduled(fixedDelay=3000, initialDelay=30000) // 1 sec after 40 sec
+	public void pubtask() {
 		
-		if(subflag == false) {
-			
-			gcMqttClient.subscribe("t1", this);
-			gcMqttClient.subscribe("t2", this);
-			gcMqttClient.subscribe("incident", this);
+		if(gcMqttClient.getClient().isConnected()) {
+			System.out.println(" pub t1.... " + new Date());
+			gcMqttClient.publish(1, false, "t1", "hello world");
 
-			subflag = true;
+			System.out.println(" pub t2.... " + new Date());
+			gcMqttClient.publish(1, false, "t2", "Good bye world");
+
+
+			if(subflag == false) {
+
+				gcMqttClient.subscribe("t1", this);
+				gcMqttClient.subscribe("t2", this);
+				gcMqttClient.subscribe("incident", this);
+
+				subflag = true;
+			}
+		}else {
+			System.out.println(" mqtt NOT CONNECTED !!!!!");
 		}
-		
-		
+
+
 	}
 	
-	@Scheduled(fixedRate = 8000)
-	public void pubtask() {
-		System.out.println(" pub t1.... " + new Date());
-		gcMqttClient.publish(1, false, "t1", "hello world");
-		
-		System.out.println(" pub t2.... " + new Date());
-		gcMqttClient.publish(1, false, "t2", "Good bye world");
-
-		
-
-	}
-//	
 	
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {

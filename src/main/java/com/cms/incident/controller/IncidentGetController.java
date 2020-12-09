@@ -45,7 +45,11 @@ public class IncidentGetController {
 	@GetMapping("/all")
 	public List<IncidentModel> getAll(HttpServletRequest request){
 		AuthUtil.getInfo();
-		return service.getAll();
+		List<IncidentModel> incidentList = service.getAll();
+		
+		gcMqttClient.publish(1, false, "incident", incidentList.toString());
+
+		return incidentList;
 	}
 	
 	/**
@@ -56,7 +60,8 @@ public class IncidentGetController {
 	@RolesAllowed("user")
 	@GetMapping("/wsid/{wsid}")
 	public List<IncidentModel> getAll(@PathVariable("wsid") String workspaceId){
-		//TODO  assuming cxtOrigin is the workspace he is currently login
+		
+		
 		return service.getAllByWs(workspaceId);
 	}
 	
@@ -87,6 +92,8 @@ public class IncidentGetController {
 		return service.getIncidentSummeryPg(id, page, size);
 	}
 	
+	
+	
 	@RolesAllowed("user")
 	@GetMapping("/{name}")
 	public ResponseEntity<IncidentModel> getName(@PathVariable("name") String name){
@@ -98,6 +105,8 @@ public class IncidentGetController {
 
 	    return new ResponseEntity<>(model, HttpStatus.OK);
 
+	    
+	    
 // Solution 2	this does not return a json error    
 //		if(service.existsByName(name)){
 //			Optional<IncidentShort> result = service.getByName(name);
@@ -112,8 +121,11 @@ public class IncidentGetController {
 	public IncidentModel getMyName(@PathVariable("name") String name){
 		
 			Optional<IncidentModel> result = service.getByName(name);
-			IncidentModel m = result.get();
-			return m;
+			IncidentModel model = result.get();
+			
+			gcMqttClient.publish(1, false, "incident", model.toString());
+
+			return model;
 	}
 	
 	@RolesAllowed({"admin","user"})

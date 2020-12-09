@@ -15,19 +15,19 @@ public class AuthUtil {
 
 	public static void getInfo() {
 		
-		System.out.println(".................");
-
-		Principal principal = SecurityContextHolder.getContext().getAuthentication();
-	 	
-		if (principal instanceof UserDetails) {
-	 		String username = ((UserDetails)principal). getUsername();
-	 		System.out.println(" can cast to UserDetails : " + username);
-	 	} else {
-	 		String username = principal. toString();
-	 		System.out.println(" CANNOT cast to UserDetails : " + username);
-
-	 	}
-	 	
+//		System.out.println(".................");
+//
+//		Principal principal = SecurityContextHolder.getContext().getAuthentication();
+//	 	
+//		if (principal instanceof UserDetails) {
+//	 		String username = ((UserDetails)principal). getUsername();
+//	 		System.out.println(" can cast to UserDetails : " + username);
+//	 	} else {
+//	 		String username = principal. toString();
+//	 		System.out.println(" CANNOT cast to UserDetails : " + username);
+//
+//	 	}
+//	 	
 	 	
 		//  KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) request.getUserPrincipal();        
 		  KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) 

@@ -1,5 +1,7 @@
 package com.cms.incident.mqtt;
 
+import javax.annotation.PreDestroy;
+
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -22,12 +24,15 @@ public class GcMqttClient {
 	@Autowired
 	public GcMqttClient(GcMqttConfig mqttconfig) {
 		config = mqttconfig;
+		
 		connect();
 	}
-//	public MqttClient getClient() {
-//		
-//		return mqttClient;
-//	}
+	
+	
+	public MqttClient getClient() {		
+		return mqttClient;
+	}
+	
 //	
 //	private static void setClient(MqttClient client) {
 //		mqttClient = client;
@@ -40,17 +45,20 @@ public class GcMqttClient {
 //					String password, 
 //					int timeout,
 //					int keepalive) {
+	// @PostConstruct
+
 		public void connect() {
 			
 		
 		String host = config.getHostUrl();
-		String clientID = config.getClientID();
+		String clientID = config.getClientID() + MqttClient.generateClientId(); // make user unique
 		String userName = config.getUsername();
 		String password = config.getPassword();
 		int timeout = config.getTimeout();
 		int keepalive = config.getKeepalive();
 		
 		try {
+	
 			mqttClient = new MqttClient(host, clientID, new MemoryPersistence());
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setCleanSession(true);
@@ -58,9 +66,12 @@ public class GcMqttClient {
 			options.setPassword(password.toCharArray());
 			options.setConnectionTimeout(timeout);
 			options.setKeepAliveInterval(keepalive);
+			options.setAutomaticReconnect(true);
 			
 			try {
+				
 				mqttClient.connect(options);
+				
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -101,6 +112,24 @@ public class GcMqttClient {
 			mqttClient.subscribe(topic, messageListener);
 		}catch(MqttException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@PreDestroy
+	private void destory() {
+		try {
+			if (mqttClient.isConnected()) {
+				mqttClient.disconnect();
+			}
+		} catch (Exception ex) {
+			// TODO log  exception
+
+		} finally {
+			try {
+				mqttClient.close();
+			} catch (MqttException e) {
+				// TODO log  exception
+			}
 		}
 	}
 	

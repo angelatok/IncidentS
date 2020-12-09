@@ -33,6 +33,8 @@ public class IncidentPostController {
 		this.service = incidentService;
 		this.gcMqttClient = client;
 	}
+	
+
 	@RolesAllowed({"admin","user"})
 	@PostMapping("/add")
 	@ResponseBody
